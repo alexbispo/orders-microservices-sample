@@ -2,12 +2,12 @@ package br.com.alexbispo.orders.creation;
 
 import java.util.UUID;
 
-public final class OrderItemRequestModel {
+public final class OrderCreationItemRequestModel {
 	
 	private final UUID orderItemId;
 	private final long quantity;
 	
-	public OrderItemRequestModel(UUID orderItemId, long quantity) {
+	public OrderCreationItemRequestModel(UUID orderItemId, long quantity) {
 		this.orderItemId = orderItemId;
 		this.quantity = quantity;
 	}
@@ -41,7 +41,7 @@ public final class OrderItemRequestModel {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		OrderItemRequestModel other = (OrderItemRequestModel) obj;
+		OrderCreationItemRequestModel other = (OrderCreationItemRequestModel) obj;
 		if (orderItemId == null) {
 			if (other.orderItemId != null)
 				return false;

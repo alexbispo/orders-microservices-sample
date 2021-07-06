@@ -8,13 +8,13 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public final class OrderRequestModel {
+public final class OrderCreationRequestModel {
 	private final UUID userId;
 	private final BigDecimal amount;
-	private final Set<OrderItemRequestModel> orderItems;
-	private final Map<UUID, OrderItemRequestModel> requestedQuantityForItem;
+	private final Set<OrderCreationItemRequestModel> orderItems;
+	private final Map<UUID, OrderCreationItemRequestModel> requestedQuantityForItem;
 	
-	public OrderRequestModel(UUID userId, BigDecimal amount, Set<OrderItemRequestModel> orderItems) {
+	public OrderCreationRequestModel(UUID userId, BigDecimal amount, Set<OrderCreationItemRequestModel> orderItems) {
 		this.userId = userId;
 		this.amount = amount;
 		this.orderItems = orderItems;
@@ -25,15 +25,19 @@ public final class OrderRequestModel {
 		return this.userId;
 	}
 	
-	public Set<OrderItemRequestModel> getOrderItems() {
+	public BigDecimal getAmount() {
+		return this.amount;
+	}
+	
+	public Set<OrderCreationItemRequestModel> getOrderItems() {
 		return Collections.unmodifiableSet(this.orderItems);
 	}
 	
 	public Set<UUID> getOrderItemsIds() {
-		return getOrderItems().stream().map(OrderItemRequestModel::getOrderIemId).collect(Collectors.toSet());
+		return getOrderItems().stream().map(OrderCreationItemRequestModel::getOrderIemId).collect(Collectors.toSet());
 	}
 	
-	public OrderItemRequestModel getRequestedOrderItemForId(UUID orderItemId) {
+	public OrderCreationItemRequestModel getRequestedOrderItemForId(UUID orderItemId) {
 		if (!requestedQuantityForItem.isEmpty()) {
 			return requestedQuantityForItem.get(orderItemId);
 		}

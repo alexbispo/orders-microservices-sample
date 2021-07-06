@@ -1,9 +1,9 @@
 package br.com.alexbispo.orders.creation;
 
-public final class OrderResponseModel {
+public final class OrderCreationResponseModel {
 	private final Long id;
 
-	public OrderResponseModel(Long id) {
+	public OrderCreationResponseModel(Long id) {
 		this.id = id;
 	}
 

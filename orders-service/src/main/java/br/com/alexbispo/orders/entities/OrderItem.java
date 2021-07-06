@@ -1,4 +1,4 @@
-package br.com.alexbispo.orders.creation;
+package br.com.alexbispo.orders.entities;
 
 import java.math.BigDecimal;
 import java.util.UUID;

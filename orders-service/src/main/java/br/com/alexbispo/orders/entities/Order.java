@@ -1,4 +1,4 @@
-package br.com.alexbispo.orders.creation;
+package br.com.alexbispo.orders.entities;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -16,6 +16,17 @@ public final class Order {
 	
 	public Order() {
 		this(new HashSet<>(), BigDecimal.ZERO);
+	}
+	
+	public Order addItems(Set<OrderItem> items) {
+		HashSet<OrderItem> newOrderItems = new HashSet<>(this.orderItems);
+
+		BigDecimal newAmount = this.amount;
+		if (newOrderItems.addAll(items)) {
+			newAmount = calculateAmount(newOrderItems);
+		}
+		
+		return new Order(newOrderItems, newAmount);
 	}
 
 	public Order addItem(OrderItem item) {

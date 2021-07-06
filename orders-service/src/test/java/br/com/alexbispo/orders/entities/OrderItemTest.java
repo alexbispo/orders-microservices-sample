@@ -1,4 +1,4 @@
-package br.com.alexbispo.orders.creation;
+package br.com.alexbispo.orders.entities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
