@@ -1,5 +1,8 @@
 package br.com.alexbispo.orders.creation;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class OrderCreationOutputImpl implements OrderCreationOutput {
 
 	@Override

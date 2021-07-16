@@ -8,4 +8,6 @@ import br.com.alexbispo.orders.entities.OrderItem;
 public interface OrderCreationItemsRepository {
 	
 	public Set<OrderItem> findByIds(Set<UUID> ids);
+
+	void save(OrderItem soldOutItem);
 }

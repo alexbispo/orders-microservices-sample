@@ -3,18 +3,21 @@ package br.com.alexbispo.orders.creation;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Component;
+
 import br.com.alexbispo.orders.entities.Order;
 import br.com.alexbispo.orders.entities.OrderItem;
 
-public final class OrderCreationService implements OrderCreationInput {
+@Component
+public final class OrderCreationInputImpl implements OrderCreationInput {
 	
 	private final OrderCreationUsersRepository usersRepository;
 	private final OrderCreationOrdersRepository ordersRepository;
 	private final OrderCreationOutput outputImpl;
 	private final OrderCreationItemsRepository orderItemsRepository;
 
-	public OrderCreationService(OrderCreationUsersRepository usersRepository, OrderCreationOrdersRepository ordersRepository,
-			OrderCreationItemsRepository orderItemsRepository, OrderCreationOutput outputImpl) {
+	public OrderCreationInputImpl(OrderCreationUsersRepository usersRepository, OrderCreationOrdersRepository ordersRepository,
+								  OrderCreationItemsRepository orderItemsRepository, OrderCreationOutput outputImpl) {
 		this.usersRepository = usersRepository;
 		this.ordersRepository = ordersRepository;
 		this.outputImpl = outputImpl;
@@ -42,7 +45,7 @@ public final class OrderCreationService implements OrderCreationInput {
 			return outputImpl.fail("Invalid Order amount.");
 		}
 		
-		ordersRepository.save(null);
+		ordersRepository.save(order);
 		
 		return null;
 	}
