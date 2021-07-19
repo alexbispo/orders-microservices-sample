@@ -2,9 +2,9 @@ package br.com.alexbispo.orders.creation;
 
 import br.com.alexbispo.orders.entities.Order;
 import br.com.alexbispo.orders.entities.OrderItem;
+import br.com.alexbispo.orders.entities.Product;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -20,7 +20,8 @@ public class JpaOrderCreationOrders implements OrderCreationOrdersRepository{
     }
 
     @Override
-    public void save(Order order) {
+    public Optional<Order> save(Order order) {
+        return Optional.empty();
     }
 
     @Override
@@ -29,11 +30,16 @@ public class JpaOrderCreationOrders implements OrderCreationOrdersRepository{
 
         Optional<Order> result = foundOrder.flatMap(fo -> {
             Set<OrderItem> items = fo.getItems().stream()
-                    .map(it ->
-                            new OrderItem(
-                                    it.getId(),
-                                    it.getPrice(),
-                                    it.getAvailableQuantity()).place(it.getQuantity()))
+                    .map(it -> {
+                        Product product = new Product(
+                                Optional.of(it.getProductId()),
+                                Optional.of(it.getProductPrice()),
+                                it.getProductAvailableQuantity()
+                        );
+                        return new OrderItem(Optional.of(product))
+                                .place(it.getQuantity())
+                                .setId(it.getId());
+                    })
                     .collect(Collectors.toSet());
             return Optional.of(new Order().setId(fo.getId()).addItems(items));
         });

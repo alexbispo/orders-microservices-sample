@@ -14,7 +14,7 @@ public class JpaOrder {
     @GeneratedValue
     private UUID id;
 
-    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JpaOrderItem> orderItems = new ArrayList<>();
 
     public UUID getId() {

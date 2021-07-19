@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,11 @@ public class OrderItemTest {
 	
 	@Test
 	void whenIncrement_thenAmountShouldBeCalculated() {
-		OrderItem item = new OrderItem(UUID.randomUUID(), new BigDecimal("1.99"), 20L).place(10);
+		Product product = new Product(
+				Optional.of(UUID.randomUUID()),
+				Optional.of(new BigDecimal("1.99")), 20L
+		);
+		OrderItem item = new OrderItem(Optional.of(product)).place(10);
 		
 		BigDecimal expected = new BigDecimal("19.90");
 		assertTrue(expected.compareTo(item.getAmount()) == 0);
@@ -21,16 +26,24 @@ public class OrderItemTest {
 	
 	@Test
 	void whenIncrement_thenDecreaseAvailableQuantity() {
-		OrderItem item = new OrderItem(UUID.randomUUID(), new BigDecimal("1.99"), 20L).place(10);
+		Product product = new Product(
+				Optional.of(UUID.randomUUID()),
+				Optional.of(new BigDecimal("1.99")), 20L
+		);
+
+		OrderItem item = new OrderItem(Optional.of(product)).place(10);
 		
-		assertEquals(10L, item.getAvailableQuantity());
+		assertEquals(10L, item.getProductAvailableQuantity());
 	}
 	
 	@Test
 	void whenIncrementToGreaterThanAvailableQuantity_thenThrowsException() {
-		UUID itemId = UUID.randomUUID();
-		long availableQuantity = 5L;
-		OrderItem item = new OrderItem(itemId, new BigDecimal("1.99"), availableQuantity);
+		Product product = new Product(
+				Optional.of(UUID.randomUUID()),
+				Optional.of(new BigDecimal("1.99")), 5L
+		);
+
+		OrderItem item = new OrderItem(Optional.of(product));
 		
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
 			item.place(10);

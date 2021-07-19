@@ -1,7 +1,9 @@
 package br.com.alexbispo.orders.creation;
 
+import java.util.Optional;
+
 public interface OrderCreationOutput {
-	public OrderCreationResponseModel success();
+	public Optional<OrderCreationResponseModel> success();
 	
-	public OrderCreationResponseModel fail(String message);
+	public Optional<OrderCreationResponseModel> fail(String message);
 }

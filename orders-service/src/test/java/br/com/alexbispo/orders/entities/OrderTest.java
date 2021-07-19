@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -16,8 +17,17 @@ public class OrderTest {
 	
 	@Test
 	void givenOrderItemsAndAmount_whenAmountIsDifferent_thenIsFalse() {
-		OrderItem item1 = new OrderItem(UUID.randomUUID(), new BigDecimal("50.00"), 10L).place();
-		OrderItem item2 = new OrderItem(UUID.randomUUID(), new BigDecimal("50.00"), 10L).place();
+		Product product1 = new Product(
+				Optional.of(UUID.randomUUID()),
+				Optional.of(new BigDecimal("50.00")), 10L
+		);
+		Product product2 = new Product(
+				Optional.of(UUID.randomUUID()),
+				Optional.of(new BigDecimal("50.00")), 10L
+		);
+
+		OrderItem item1 = new OrderItem(Optional.of(product1)).place();
+		OrderItem item2 = new OrderItem(Optional.of(product2)).place();
 		
 		Order order = new Order().addItem(item1).addItem(item2);
 		
@@ -26,8 +36,17 @@ public class OrderTest {
 	
 	@Test
 	void givenOrderItemsAndAmount_whenAmountIsCorrect_thenIsTrue() {
-		OrderItem item1 = new OrderItem(UUID.randomUUID(), new BigDecimal("50.00"), 10L).place();
-		OrderItem item2 = new OrderItem(UUID.randomUUID(), new BigDecimal("50.00"), 10L).place(2);
+		Product product1 = new Product(
+				Optional.of(UUID.randomUUID()),
+				Optional.of(new BigDecimal("50.00")), 10L
+		);
+		Product product2 = new Product(
+				Optional.of(UUID.randomUUID()),
+				Optional.of(new BigDecimal("50.00")), 10L
+		);
+
+		OrderItem item1 = new OrderItem(Optional.of(product1)).place();
+		OrderItem item2 = new OrderItem(Optional.of(product2)).place(2);
 		
 		Set<OrderItem> items = new HashSet<>();
 		items.add(item1);

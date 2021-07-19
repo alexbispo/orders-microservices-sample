@@ -2,16 +2,18 @@ package br.com.alexbispo.orders.creation;
 
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class OrderCreationOutputImpl implements OrderCreationOutput {
 
 	@Override
-	public OrderCreationResponseModel success() {
-		return null;
+	public Optional<OrderCreationResponseModel> success() {
+		return Optional.empty();
 	}
 
 	@Override
-	public OrderCreationResponseModel fail(String message) {
+	public Optional<OrderCreationResponseModel> fail(String message) {
 		throw new RuntimeException(message);
 	}
 

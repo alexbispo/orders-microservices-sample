@@ -1,31 +1,34 @@
 package br.com.alexbispo.orders.entities;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 
 public final class OrderItem {
 	private final UUID id;
 	private final long quantity;
 	private final BigDecimal amount;
-	private final BigDecimal price;
-	private final long availableQuanity;
+	private final Product product;
 
-	private OrderItem(UUID id, BigDecimal price, long availableQuanity, long quantity, BigDecimal amount) {
+	private OrderItem(UUID id, Product product, long quantity, BigDecimal amount) {
 		this.id = id;
 		this.quantity = quantity;
 		this.amount = amount;
-		this.price = price;
-		this.availableQuanity = availableQuanity;
+		this.product = product;
 	}
 
-	public OrderItem(UUID id, BigDecimal price, long availableQuanity) {
-		this(id, price, availableQuanity, 0L, BigDecimal.ZERO);
+	public OrderItem(Optional<Product> product) {
+		this(null, product.orElseThrow(), 0L, BigDecimal.ZERO);
 	}
 	
 	public UUID getId() {
 		return this.id;
 	}
-	
+
+	public OrderItem setId(UUID id) {
+		return new OrderItem(id, this.product, this.quantity, this.amount);
+	}
+
 	public BigDecimal getAmount() {
 		return this.amount;
 	}
@@ -34,57 +37,35 @@ public final class OrderItem {
 		return this.quantity;
 	}
 	
-	public long getAvailableQuantity() {
-		return this.availableQuanity;
+	public Product getProduct() {
+		return this.product;
 	}
 	
 	public OrderItem place(long quantity) {
 		long newQuantity = this.quantity + quantity;
 		
-		if (newQuantity > this.availableQuanity) {
+		if (newQuantity > this.product.getAvailableQuantity()) {
 			throw new RuntimeException("Available quantity sold out. " + this);
 		}
 		
-		long newAvailableQuantity = this.availableQuanity - quantity; 
+		Product newProduct = this.product.addAvailableQuantity(-quantity);
+
+		BigDecimal newAmount = newProduct.getPrice().multiply(BigDecimal.valueOf(newQuantity));
 		
-		BigDecimal newAmount = this.price.multiply(BigDecimal.valueOf(newQuantity));
-		
-		return new OrderItem(this.id, this.price, newAvailableQuantity, newQuantity, newAmount);
+		return new OrderItem(this.id, newProduct, newQuantity, newAmount);
 	}
 	
 	public OrderItem place() {
 		return place(1);
 	}
 
+	public long getProductAvailableQuantity() {
+		return this.product.getAvailableQuantity();
+	}
+
 	@Override
 	public String toString() {
-		return "OrderItem [id=" + id + ", quantity=" + quantity + ", amount=" + amount + ", price=" + price
-				+ ", availableQuanity=" + availableQuanity + "]";
+		return "OrderItem [id=" + id + ", quantity=" + quantity + ", amount=" + amount + "]";
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		OrderItem other = (OrderItem) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
-	
 }

@@ -1,8 +1,10 @@
 package br.com.alexbispo.orders.creation;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import br.com.alexbispo.orders.entities.Product;
 import org.springframework.stereotype.Component;
 
 import br.com.alexbispo.orders.entities.Order;
@@ -14,40 +16,41 @@ public final class OrderCreationInputImpl implements OrderCreationInput {
 	private final OrderCreationUsersRepository usersRepository;
 	private final OrderCreationOrdersRepository ordersRepository;
 	private final OrderCreationOutput outputImpl;
-	private final OrderCreationItemsRepository orderItemsRepository;
+	private final OrderCreationProductsRepository orderProductsRepository;
 
 	public OrderCreationInputImpl(OrderCreationUsersRepository usersRepository, OrderCreationOrdersRepository ordersRepository,
-								  OrderCreationItemsRepository orderItemsRepository, OrderCreationOutput outputImpl) {
+								  OrderCreationProductsRepository orderProductsRepository, OrderCreationOutput outputImpl) {
 		this.usersRepository = usersRepository;
 		this.ordersRepository = ordersRepository;
 		this.outputImpl = outputImpl;
-		this.orderItemsRepository = orderItemsRepository;
+		this.orderProductsRepository = orderProductsRepository;
 	}
 
 	@Override
-	public OrderCreationResponseModel create(OrderCreationRequestModel requestModel) {
+	public Optional<OrderCreationResponseModel> create(OrderCreationRequestModel requestModel) {
 		if (!usersRepository.existsById(requestModel.getUserId())) {
 			return outputImpl.fail("User not found.");
 		}
 		
-		Set<OrderItem> orderItemsFound = orderItemsRepository.findByIds(requestModel.getOrderItemsIds());
-		if (orderItemsFound.isEmpty()) {
-			return outputImpl.fail("Order Items not found.");
+		Set<Product> productsFound = this.orderProductsRepository.findByIds(requestModel.getOrderItemsIds());
+		if (productsFound.isEmpty()) {
+			return outputImpl.fail("Products not found.");
 		}
 		
-		Set<OrderItem> placedItems = orderItemsFound.stream().map(item -> 
-			item.place(requestModel.getRequestedOrderItemForId(item.getId()).getQuantity())
-		).collect(Collectors.toSet());
+		Set<OrderItem> placedItems = productsFound.stream().map(product -> {
+		    return new OrderItem(Optional.of(product))
+                    .place(requestModel.getRequestedOrderItemForId(product.getId()).getQuantity());
+        }).collect(Collectors.toSet());
 		
 		Order order = new Order().addItems(placedItems);
 		
 		if(!order.isAmount(requestModel.getAmount())) {
 			return outputImpl.fail("Invalid Order amount.");
 		}
-		
-		ordersRepository.save(order);
-		
-		return null;
+
+		ordersRepository.save(order).get();
+
+		return Optional.empty();
 	}
 
 }

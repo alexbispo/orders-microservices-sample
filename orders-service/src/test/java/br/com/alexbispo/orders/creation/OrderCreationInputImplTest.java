@@ -2,10 +2,14 @@ package br.com.alexbispo.orders.creation;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import br.com.alexbispo.orders.entities.Order;
 import br.com.alexbispo.orders.entities.OrderItem;
+import br.com.alexbispo.orders.entities.Product;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +30,15 @@ public class OrderCreationInputImplTest {
 	private OrderCreationInput orderCreationInput;
 
 	@Autowired
-	private OrderCreationItemsRepository orderItemsRepo;
+	private OrderCreationProductsRepository orderProductsRepo;
 
 	@Autowired
 	private OrderCreationOrdersRepository ordersRepository;
+
+//	@BeforeEach
+//	void init() {
+//		orderProductsRepo.
+//	}
 
 	@Test
 	void givenAnOrderWithUserThatDoesNotExists_whenCreate_thenThrowsException() {
@@ -67,11 +76,14 @@ public class OrderCreationInputImplTest {
 
 	@Test
 	void givenAnOrderWithOrderItemThatQuantityIsNotAvailable_whenCreate_thenThrowsException() {
-		OrderItem soldOutItem = new OrderItem(UUID.randomUUID(), new BigDecimal("50.00"), 0);
-		orderItemsRepo.save(soldOutItem);
+		Product soldOutProduct = new Product(
+				Optional.of(UUID.randomUUID()),
+				Optional.of(new BigDecimal("50.00")), 0
+		);
+		orderProductsRepo.save(soldOutProduct);
 
 		Set<OrderCreationItemRequestModel> items = new HashSet<OrderCreationItemRequestModel>();
-		items.add(new OrderCreationItemRequestModel(soldOutItem.getId(), 10L));
+		items.add(new OrderCreationItemRequestModel(soldOutProduct.getId(), 10L));
 
 		OrderCreationRequestModel requestModel = new OrderCreationRequestModel(
 			UUID.randomUUID(),
@@ -82,16 +94,19 @@ public class OrderCreationInputImplTest {
 			 this.orderCreationInput.create(requestModel);
 		});
 
-		assertEquals("Available quantity sold out. " + soldOutItem, exception.getMessage());
+		assertEquals("Available quantity sold out. " + soldOutProduct, exception.getMessage());
 	}
 
 	@Test
 	void givenAnOrderWithIncorrectAmount_whenCreate_thenThrowsException() {
-		OrderItem availableItem = new OrderItem(UUID.randomUUID(), new BigDecimal("50.00"), 100);
-		orderItemsRepo.save(availableItem);
+		Product availableProduct = new Product(
+				Optional.of(UUID.randomUUID()),
+				Optional.of(new BigDecimal("50.00")), 100
+		);
+		orderProductsRepo.save(availableProduct);
 
 		Set<OrderCreationItemRequestModel> requestedItems = new HashSet<OrderCreationItemRequestModel>();
-		requestedItems.add(new OrderCreationItemRequestModel(availableItem.getId(), 10L));
+		requestedItems.add(new OrderCreationItemRequestModel(availableProduct.getId(), 10L));
 
 		OrderCreationRequestModel requestModel = new OrderCreationRequestModel(
 			UUID.randomUUID(),
@@ -108,11 +123,13 @@ public class OrderCreationInputImplTest {
 
 	@Test
 	void givenTheValidOrderRequest_whenCreate_thenSaveOrder() {
-		OrderCreationOutput outputImpl = new OrderCreationOutputImpl();
-		OrderItem availableItem = new OrderItem(UUID.randomUUID(), new BigDecimal("55.00"), 100L);
-		orderItemsRepo.save(availableItem);
+		Product availableProduct = new Product(
+				Optional.of(UUID.randomUUID()),
+				Optional.of(new BigDecimal("55.00")), 100L
+		);
+		orderProductsRepo.save(availableProduct);
 		Set<OrderCreationItemRequestModel> requestedItems = new HashSet<OrderCreationItemRequestModel>();
-		requestedItems.add(new OrderCreationItemRequestModel(availableItem.getId(), 2L));
+		requestedItems.add(new OrderCreationItemRequestModel(availableProduct.getId(), 2L));
 
 		OrderCreationRequestModel requestModel = new OrderCreationRequestModel(
 			UUID.randomUUID(),
@@ -120,9 +137,9 @@ public class OrderCreationInputImplTest {
 			requestedItems
 		);
 
-		OrderCreationResponseModel responseModel = orderCreationInput.create(requestModel);
+		Optional<OrderCreationResponseModel> responseModel = orderCreationInput.create(requestModel);
 
-		assertTrue(ordersRepository.findById(responseModel.getId()).isPresent());
+		assertTrue(responseModel.flatMap(resp -> ordersRepository.findById(resp.getId())).isPresent());
 	}
 	
 }

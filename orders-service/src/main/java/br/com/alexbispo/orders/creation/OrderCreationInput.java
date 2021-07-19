@@ -1,5 +1,7 @@
 package br.com.alexbispo.orders.creation;
 
+import java.util.Optional;
+
 public interface OrderCreationInput {
-	public OrderCreationResponseModel create(OrderCreationRequestModel requestModel);
+	public Optional<OrderCreationResponseModel> create(OrderCreationRequestModel requestModel);
 }

@@ -13,13 +13,14 @@ public class JpaOrderItem {
     private UUID id;
 
     @ManyToOne
+    @JoinColumn(name = "order_id", foreignKey = @ForeignKey(name = "ORDER_ID_FK"))
     private JpaOrder order;
 
-    private Long availableQuantity;
+    @ManyToOne
+    @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "PRODUCT_ID_FK"))
+    private JpaProduct product;
 
     private BigDecimal amount;
-
-    private BigDecimal price;
 
     private Long quantity;
 
@@ -39,15 +40,19 @@ public class JpaOrderItem {
         return amount;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public UUID getProductId() {
+        return product.getId();
     }
 
-    public Long getAvailableQuantity() {
-        return availableQuantity;
+    public BigDecimal getProductPrice() {
+        return product.getPrice();
     }
 
     public Long getQuantity() {
         return quantity;
+    }
+
+    public Long getProductAvailableQuantity() {
+        return product.getAvailableQuantity();
     }
 }
