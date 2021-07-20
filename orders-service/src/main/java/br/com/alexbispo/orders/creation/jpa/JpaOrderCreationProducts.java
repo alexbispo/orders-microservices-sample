@@ -1,7 +1,7 @@
 package br.com.alexbispo.orders.creation.jpa;
 
-import br.com.alexbispo.orders.creation.OrderCreationProductsRepository;
-import br.com.alexbispo.orders.entities.Product;
+import br.com.alexbispo.orders.creation.repository.OrderCreationProductsRepository;
+import br.com.alexbispo.orders.entity.Product;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

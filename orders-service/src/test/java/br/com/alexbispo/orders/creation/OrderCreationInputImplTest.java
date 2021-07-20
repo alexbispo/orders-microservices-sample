@@ -6,8 +6,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import br.com.alexbispo.orders.entities.Product;
-import br.com.alexbispo.orders.entities.User;
+import br.com.alexbispo.orders.creation.repository.OrderCreationOrdersRepository;
+import br.com.alexbispo.orders.creation.repository.OrderCreationProductsRepository;
+import br.com.alexbispo.orders.creation.repository.OrderCreationUsersRepository;
+import br.com.alexbispo.orders.entity.Product;
+import br.com.alexbispo.orders.entity.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

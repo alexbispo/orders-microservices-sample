@@ -1,4 +1,4 @@
-package br.com.alexbispo.orders.entities;
+package br.com.alexbispo.orders.entity;
 
 import java.util.Optional;
 import java.util.UUID;

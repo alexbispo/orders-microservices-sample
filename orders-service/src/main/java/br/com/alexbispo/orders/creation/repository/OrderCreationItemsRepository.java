@@ -1,9 +1,9 @@
-package br.com.alexbispo.orders.creation;
+package br.com.alexbispo.orders.creation.repository;
 
 import java.util.Set;
 import java.util.UUID;
 
-import br.com.alexbispo.orders.entities.OrderItem;
+import br.com.alexbispo.orders.entity.OrderItem;
 
 public interface OrderCreationItemsRepository {
 	

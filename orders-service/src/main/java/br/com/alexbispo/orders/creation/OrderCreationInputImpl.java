@@ -4,11 +4,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import br.com.alexbispo.orders.entities.Product;
+import br.com.alexbispo.orders.creation.repository.OrderCreationItemsRepository;
+import br.com.alexbispo.orders.creation.repository.OrderCreationOrdersRepository;
+import br.com.alexbispo.orders.creation.repository.OrderCreationProductsRepository;
+import br.com.alexbispo.orders.creation.repository.OrderCreationUsersRepository;
+import br.com.alexbispo.orders.entity.Product;
 import org.springframework.stereotype.Component;
 
-import br.com.alexbispo.orders.entities.Order;
-import br.com.alexbispo.orders.entities.OrderItem;
+import br.com.alexbispo.orders.entity.Order;
+import br.com.alexbispo.orders.entity.OrderItem;
 
 @Component
 public final class OrderCreationInputImpl implements OrderCreationInput {

@@ -1,6 +1,6 @@
-package br.com.alexbispo.orders.creation;
+package br.com.alexbispo.orders.creation.repository;
 
-import br.com.alexbispo.orders.entities.Order;
+import br.com.alexbispo.orders.entity.Order;
 
 import java.util.Optional;
 import java.util.UUID;

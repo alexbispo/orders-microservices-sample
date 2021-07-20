@@ -1,7 +1,7 @@
 package br.com.alexbispo.orders.creation.jpa;
 
-import br.com.alexbispo.orders.creation.OrderCreationUsersRepository;
-import br.com.alexbispo.orders.entities.User;
+import br.com.alexbispo.orders.creation.repository.OrderCreationUsersRepository;
+import br.com.alexbispo.orders.entity.User;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;

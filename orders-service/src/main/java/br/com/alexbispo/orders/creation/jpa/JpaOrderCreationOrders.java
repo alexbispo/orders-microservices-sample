@@ -1,9 +1,9 @@
 package br.com.alexbispo.orders.creation.jpa;
 
-import br.com.alexbispo.orders.creation.OrderCreationOrdersRepository;
-import br.com.alexbispo.orders.entities.Order;
-import br.com.alexbispo.orders.entities.OrderItem;
-import br.com.alexbispo.orders.entities.Product;
+import br.com.alexbispo.orders.creation.repository.OrderCreationOrdersRepository;
+import br.com.alexbispo.orders.entity.Order;
+import br.com.alexbispo.orders.entity.OrderItem;
+import br.com.alexbispo.orders.entity.Product;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;

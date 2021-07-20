@@ -1,4 +1,4 @@
-package br.com.alexbispo.orders.entities;
+package br.com.alexbispo.orders.entity;
 
 import java.math.BigDecimal;
 import java.util.Optional;

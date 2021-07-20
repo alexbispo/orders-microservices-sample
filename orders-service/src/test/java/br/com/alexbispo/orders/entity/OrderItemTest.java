@@ -1,12 +1,10 @@
-package br.com.alexbispo.orders.entities;
+package br.com.alexbispo.orders.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
-import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 

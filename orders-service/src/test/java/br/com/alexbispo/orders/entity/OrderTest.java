@@ -1,17 +1,13 @@
-package br.com.alexbispo.orders.entities;
+package br.com.alexbispo.orders.entity;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
-
-import br.com.alexbispo.orders.entities.Order;
 
 public class OrderTest {
 	
