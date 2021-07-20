@@ -1,4 +1,4 @@
-package br.com.alexbispo.orders.creation;
+package br.com.alexbispo.orders.creation.jpa;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

@@ -1,5 +1,6 @@
-package br.com.alexbispo.orders.creation;
+package br.com.alexbispo.orders.creation.jpa;
 
+import br.com.alexbispo.orders.creation.OrderCreationOrdersRepository;
 import br.com.alexbispo.orders.entities.Order;
 import br.com.alexbispo.orders.entities.OrderItem;
 import br.com.alexbispo.orders.entities.Product;
@@ -12,7 +13,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
-public class JpaOrderCreationOrders implements OrderCreationOrdersRepository{
+public class JpaOrderCreationOrders implements OrderCreationOrdersRepository {
 
     private final JpaOrderCreationOrdersRepository repo;
 

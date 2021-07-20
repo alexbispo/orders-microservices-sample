@@ -1,5 +1,6 @@
-package br.com.alexbispo.orders.creation;
+package br.com.alexbispo.orders.creation.jpa;
 
+import br.com.alexbispo.orders.creation.OrderCreationUsersRepository;
 import br.com.alexbispo.orders.entities.User;
 import org.springframework.stereotype.Component;
 

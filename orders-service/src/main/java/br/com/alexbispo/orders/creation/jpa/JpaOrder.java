@@ -1,6 +1,4 @@
-package br.com.alexbispo.orders.creation;
-
-import br.com.alexbispo.orders.entities.OrderItem;
+package br.com.alexbispo.orders.creation.jpa;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

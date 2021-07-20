@@ -1,6 +1,6 @@
-package br.com.alexbispo.orders.creation;
+package br.com.alexbispo.orders.creation.jpa;
 
-import br.com.alexbispo.orders.entities.OrderItem;
+import br.com.alexbispo.orders.creation.OrderCreationProductsRepository;
 import br.com.alexbispo.orders.entities.Product;
 import org.springframework.stereotype.Component;
 
@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-public class JpaOrderCreationProducts implements OrderCreationProductsRepository{
+public class JpaOrderCreationProducts implements OrderCreationProductsRepository {
 
     private final JpaOrderCreationProductsRepository repo;
 
