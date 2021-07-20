@@ -10,4 +10,6 @@ public interface OrderCreationOrdersRepository {
 	Order save(Order order);
 
 	Optional<Order> findById(UUID id);
+
+	long count();
 }

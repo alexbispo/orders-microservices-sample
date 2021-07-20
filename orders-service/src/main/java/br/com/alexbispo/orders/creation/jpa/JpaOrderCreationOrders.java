@@ -54,4 +54,9 @@ public class JpaOrderCreationOrders implements OrderCreationOrdersRepository {
 
         return result;
     }
+
+    @Override
+    public long count() {
+        return this.repo.count();
+    }
 }

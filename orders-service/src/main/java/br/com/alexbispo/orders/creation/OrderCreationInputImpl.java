@@ -13,9 +13,10 @@ import org.springframework.stereotype.Component;
 
 import br.com.alexbispo.orders.entity.Order;
 import br.com.alexbispo.orders.entity.OrderItem;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public final class OrderCreationInputImpl implements OrderCreationInput {
+public class OrderCreationInputImpl implements OrderCreationInput {
 	
 	private final OrderCreationUsersRepository usersRepository;
 	private final OrderCreationOrdersRepository ordersRepository;
@@ -33,6 +34,7 @@ public final class OrderCreationInputImpl implements OrderCreationInput {
 	}
 
 	@Override
+    @Transactional
 	public Optional<OrderCreationResponseModel> create(OrderCreationRequestModel requestModel) {
 		if (!usersRepository.existsById(requestModel.getUserId())) {
 			return outputImpl.fail("User not found.");
