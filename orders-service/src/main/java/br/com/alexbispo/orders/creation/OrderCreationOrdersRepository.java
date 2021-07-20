@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface OrderCreationOrdersRepository {
 	
-	Optional<Order> save(Order order);
+	Order save(Order order);
 
 	Optional<Order> findById(UUID id);
 }

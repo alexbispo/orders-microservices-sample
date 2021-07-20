@@ -10,15 +10,15 @@ public final class OrderItem {
 	private final BigDecimal amount;
 	private final Product product;
 
-	private OrderItem(UUID id, Product product, long quantity, BigDecimal amount) {
+	private OrderItem(UUID id, Optional<Product> product, long quantity, BigDecimal amount) {
 		this.id = id;
 		this.quantity = quantity;
 		this.amount = amount;
-		this.product = product;
+		this.product = product.orElseThrow();
 	}
 
-	public OrderItem(Optional<Product> product) {
-		this(null, product.orElseThrow(), 0L, BigDecimal.ZERO);
+	public OrderItem(Product product) {
+		this(null, Optional.ofNullable(product), 0L, BigDecimal.ZERO);
 	}
 	
 	public UUID getId() {
@@ -26,7 +26,7 @@ public final class OrderItem {
 	}
 
 	public OrderItem setId(UUID id) {
-		return new OrderItem(id, this.product, this.quantity, this.amount);
+		return new OrderItem(id, Optional.ofNullable(this.product), this.quantity, this.amount);
 	}
 
 	public BigDecimal getAmount() {
@@ -45,14 +45,14 @@ public final class OrderItem {
 		long newQuantity = this.quantity + quantity;
 		
 		if (newQuantity > this.product.getAvailableQuantity()) {
-			throw new RuntimeException("Available quantity sold out. " + this);
+			throw new RuntimeException("Available quantity sold out. " + this.product);
 		}
 		
 		Product newProduct = this.product.addAvailableQuantity(-quantity);
 
 		BigDecimal newAmount = newProduct.getPrice().multiply(BigDecimal.valueOf(newQuantity));
 		
-		return new OrderItem(this.id, newProduct, newQuantity, newAmount);
+		return new OrderItem(this.id, Optional.ofNullable(newProduct), newQuantity, newAmount);
 	}
 	
 	public OrderItem place() {
@@ -61,6 +61,14 @@ public final class OrderItem {
 
 	public long getProductAvailableQuantity() {
 		return this.product.getAvailableQuantity();
+	}
+
+	public BigDecimal getProductPrice() {
+		return this.product.getPrice();
+	}
+
+	public UUID getProductId() {
+		return this.product.getId();
 	}
 
 	@Override

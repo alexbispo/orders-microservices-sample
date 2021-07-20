@@ -5,6 +5,7 @@ import br.com.alexbispo.orders.entities.OrderItem;
 import br.com.alexbispo.orders.entities.Product;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityManager;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -15,13 +16,19 @@ public class JpaOrderCreationOrders implements OrderCreationOrdersRepository{
 
     private final JpaOrderCreationOrdersRepository repo;
 
-    public JpaOrderCreationOrders(JpaOrderCreationOrdersRepository repo) {
+    private final EntityManager entityManager;
+
+    public JpaOrderCreationOrders(JpaOrderCreationOrdersRepository repo, EntityManager entityManager) {
         this.repo = repo;
+        this.entityManager = entityManager;
     }
 
     @Override
-    public Optional<Order> save(Order order) {
-        return Optional.empty();
+    public Order save(Order order) {
+        JpaOrder jpaOrder = new JpaOrder();
+        jpaOrder.setAmount(order.getAmount());
+        JpaOrder savedOrder = this.repo.saveAndFlush(jpaOrder);
+        return order.setId(savedOrder.getId());
     }
 
     @Override
@@ -32,11 +39,11 @@ public class JpaOrderCreationOrders implements OrderCreationOrdersRepository{
             Set<OrderItem> items = fo.getItems().stream()
                     .map(it -> {
                         Product product = new Product(
-                                Optional.of(it.getProductId()),
-                                Optional.of(it.getProductPrice()),
+                                it.getProductPrice(),
                                 it.getProductAvailableQuantity()
-                        );
-                        return new OrderItem(Optional.of(product))
+                        ).setId(it.getProductId());
+
+                        return new OrderItem(product)
                                 .place(it.getQuantity())
                                 .setId(it.getId());
                     })

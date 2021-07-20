@@ -1,22 +1,27 @@
 package br.com.alexbispo.orders.creation;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 public final class OrderCreationResponseModel {
-	private final UUID id;
+	private final UUID orderId;
 
-	public OrderCreationResponseModel(UUID id) {
-		this.id = id;
+	private OrderCreationResponseModel(Optional<UUID> id) {
+		this.orderId = id.orElseThrow();
 	}
 
-	public UUID getId() {
-		return id;
+	public OrderCreationResponseModel(UUID id) {
+		this(Optional.ofNullable(id));
+	}
+
+	public UUID getOrderId() {
+		return orderId;
 	}
 
 	@Override
 	public String toString() {
-		return "OrderResponseModel [id=" + id + "]";
+		return "OrderResponseModel [id=" + orderId + "]";
 	}
 
 	@Override
@@ -24,11 +29,11 @@ public final class OrderCreationResponseModel {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		OrderCreationResponseModel that = (OrderCreationResponseModel) o;
-		return id.equals(that.id);
+		return orderId.equals(that.orderId);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
+		return Objects.hash(orderId);
 	}
 }

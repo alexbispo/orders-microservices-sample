@@ -1,5 +1,6 @@
 package br.com.alexbispo.orders.creation;
 
+import br.com.alexbispo.orders.entities.User;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -15,5 +16,14 @@ public class JpaOrderCreationUsers implements OrderCreationUsersRepository {
     @Override
     public boolean existsById(UUID id) {
         return this.repo.existsById(id);
+    }
+
+    @Override
+    public User save(User user) {
+        JpaUser jpaUser = new JpaUser();
+        jpaUser.setId(user.getId());
+        JpaUser savedUser = this.repo.save(jpaUser);
+        this.repo.flush();
+        return user.setId(savedUser.getId());
     }
 }

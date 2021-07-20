@@ -12,12 +12,12 @@ public class JpaOrderItem {
     @GeneratedValue
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id", foreignKey = @ForeignKey(name = "ORDER_ID_FK"))
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "order_id", nullable = false, foreignKey = @ForeignKey(name = "ORDER_ID_FK"))
     private JpaOrder order;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "PRODUCT_ID_FK"))
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_id", nullable = false, foreignKey = @ForeignKey(name = "PRODUCT_ID_FK"))
     private JpaProduct product;
 
     private BigDecimal amount;
@@ -54,5 +54,17 @@ public class JpaOrderItem {
 
     public Long getProductAvailableQuantity() {
         return product.getAvailableQuantity();
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setProduct(JpaProduct product) {
+        this.product = product;
     }
 }

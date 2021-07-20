@@ -17,13 +17,15 @@ public final class OrderCreationInputImpl implements OrderCreationInput {
 	private final OrderCreationOrdersRepository ordersRepository;
 	private final OrderCreationOutput outputImpl;
 	private final OrderCreationProductsRepository orderProductsRepository;
+	private final OrderCreationItemsRepository itemsRepository;
 
 	public OrderCreationInputImpl(OrderCreationUsersRepository usersRepository, OrderCreationOrdersRepository ordersRepository,
-								  OrderCreationProductsRepository orderProductsRepository, OrderCreationOutput outputImpl) {
+								  OrderCreationProductsRepository orderProductsRepository, OrderCreationOutput outputImpl, OrderCreationItemsRepository itemsRepository) {
 		this.usersRepository = usersRepository;
 		this.ordersRepository = ordersRepository;
 		this.outputImpl = outputImpl;
 		this.orderProductsRepository = orderProductsRepository;
+		this.itemsRepository = itemsRepository;
 	}
 
 	@Override
@@ -33,12 +35,12 @@ public final class OrderCreationInputImpl implements OrderCreationInput {
 		}
 		
 		Set<Product> productsFound = this.orderProductsRepository.findByIds(requestModel.getOrderItemsIds());
-		if (productsFound.isEmpty()) {
-			return outputImpl.fail("Products not found.");
+		if (productsFound.size() != requestModel.getOrderItemsIds().size()) {
+			return outputImpl.fail("One or more products not found.");
 		}
 		
 		Set<OrderItem> placedItems = productsFound.stream().map(product -> {
-		    return new OrderItem(Optional.of(product))
+		    return new OrderItem(product)
                     .place(requestModel.getRequestedOrderItemForId(product.getId()).getQuantity());
         }).collect(Collectors.toSet());
 		
@@ -48,9 +50,13 @@ public final class OrderCreationInputImpl implements OrderCreationInput {
 			return outputImpl.fail("Invalid Order amount.");
 		}
 
-		ordersRepository.save(order).get();
+		Set<Product> changedProducts = placedItems.stream().map(it -> it.getProduct()).collect(Collectors.toSet());
 
-		return Optional.empty();
+		Order savedOder = ordersRepository.save(order);
+		itemsRepository.saveAll(placedItems, savedOder.getId());
+		orderProductsRepository.saveAll(changedProducts);
+
+		return Optional.ofNullable(new OrderCreationResponseModel(savedOder.getId()));
 	}
 
 }

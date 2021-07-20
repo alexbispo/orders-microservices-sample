@@ -6,19 +6,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import br.com.alexbispo.orders.entities.Order;
-import br.com.alexbispo.orders.entities.OrderItem;
 import br.com.alexbispo.orders.entities.Product;
-import org.junit.jupiter.api.BeforeEach;
+import br.com.alexbispo.orders.entities.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import javax.persistence.EntityManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,10 +29,8 @@ public class OrderCreationInputImplTest {
 	@Autowired
 	private OrderCreationOrdersRepository ordersRepository;
 
-//	@BeforeEach
-//	void init() {
-//		orderProductsRepo.
-//	}
+	@Autowired
+	private OrderCreationUsersRepository usersRepository;
 
 	@Test
 	void givenAnOrderWithUserThatDoesNotExists_whenCreate_thenThrowsException() {
@@ -58,12 +50,13 @@ public class OrderCreationInputImplTest {
 	}
 	
 	@Test
-	void givenAnOrderWithOrderItemThatDoesNotExists_whenCreate_thenThrowsException() {
+	void givenAnOrderWithProductThatDoesNotExists_whenCreate_thenThrowsException() {
+		User savedUser = usersRepository.save(new User());
 		Set<OrderCreationItemRequestModel> items = new HashSet<OrderCreationItemRequestModel>();
 		items.add(new OrderCreationItemRequestModel(UUID.randomUUID(), 10L));
 
 		OrderCreationRequestModel requestModel = new OrderCreationRequestModel(
-			UUID.randomUUID(),
+				savedUser.getId(),
 			new BigDecimal("10.00"),
 			items
 		);
@@ -71,23 +64,22 @@ public class OrderCreationInputImplTest {
 			orderCreationInput.create(requestModel);
 		});
 
-		assertEquals("Order Items not found.", exception.getMessage());
+		assertEquals("One or more products not found.", exception.getMessage());
 	}
 
 	@Test
 	void givenAnOrderWithOrderItemThatQuantityIsNotAvailable_whenCreate_thenThrowsException() {
-		Product soldOutProduct = new Product(
-				Optional.of(UUID.randomUUID()),
-				Optional.of(new BigDecimal("50.00")), 0
-		);
-		orderProductsRepo.save(soldOutProduct);
+		User savedUser = usersRepository.save(new User());
+
+		Product soldOutProduct = orderProductsRepo.save(
+				new Product(new BigDecimal("50.00"), 0));
 
 		Set<OrderCreationItemRequestModel> items = new HashSet<OrderCreationItemRequestModel>();
-		items.add(new OrderCreationItemRequestModel(soldOutProduct.getId(), 10L));
+		items.add(new OrderCreationItemRequestModel(soldOutProduct.getId(), 1L));
 
 		OrderCreationRequestModel requestModel = new OrderCreationRequestModel(
-			UUID.randomUUID(),
-			new BigDecimal("10.00"),
+				savedUser.getId(),
+			new BigDecimal("50.00"),
 			items
 		);
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
@@ -99,17 +91,15 @@ public class OrderCreationInputImplTest {
 
 	@Test
 	void givenAnOrderWithIncorrectAmount_whenCreate_thenThrowsException() {
-		Product availableProduct = new Product(
-				Optional.of(UUID.randomUUID()),
-				Optional.of(new BigDecimal("50.00")), 100
-		);
-		orderProductsRepo.save(availableProduct);
+		User savedUser = usersRepository.save(new User());
+		Product availableProduct = orderProductsRepo.save(
+				new Product(new BigDecimal("50.00"), 100));
 
 		Set<OrderCreationItemRequestModel> requestedItems = new HashSet<OrderCreationItemRequestModel>();
 		requestedItems.add(new OrderCreationItemRequestModel(availableProduct.getId(), 10L));
 
 		OrderCreationRequestModel requestModel = new OrderCreationRequestModel(
-			UUID.randomUUID(),
+				savedUser.getId(),
 			new BigDecimal("10.00"),
 			requestedItems
 		);
@@ -123,23 +113,22 @@ public class OrderCreationInputImplTest {
 
 	@Test
 	void givenTheValidOrderRequest_whenCreate_thenSaveOrder() {
-		Product availableProduct = new Product(
-				Optional.of(UUID.randomUUID()),
-				Optional.of(new BigDecimal("55.00")), 100L
-		);
-		orderProductsRepo.save(availableProduct);
+		User savedUser = usersRepository.save(new User());
+		Product availableProduct = orderProductsRepo.save(
+				new Product(new BigDecimal("55.00"), 100L));
 		Set<OrderCreationItemRequestModel> requestedItems = new HashSet<OrderCreationItemRequestModel>();
 		requestedItems.add(new OrderCreationItemRequestModel(availableProduct.getId(), 2L));
 
 		OrderCreationRequestModel requestModel = new OrderCreationRequestModel(
-			UUID.randomUUID(),
+				savedUser.getId(),
 			new BigDecimal("110.00"),
 			requestedItems
 		);
 
 		Optional<OrderCreationResponseModel> responseModel = orderCreationInput.create(requestModel);
 
-		assertTrue(responseModel.flatMap(resp -> ordersRepository.findById(resp.getId())).isPresent());
+		assertTrue(responseModel.flatMap(resp -> ordersRepository.findById(resp.getOrderId())).isPresent());
+		assertEquals(98L, orderProductsRepo.findById(availableProduct.getId()).orElseThrow().getAvailableQuantity());
 	}
 	
 }

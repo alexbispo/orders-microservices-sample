@@ -12,10 +12,14 @@ public final class Product {
 
     private final long availableQuantity;
 
-    public Product(Optional<UUID> id, Optional<BigDecimal> price, long availableQuantity) {
-        this.id = id.orElseThrow(() -> new RuntimeException("Product id is mandatory."));
-        this.price = price.orElseThrow(() -> new RuntimeException("Product price is mandatory."));
+    private Product(UUID id, Optional<BigDecimal> price, long availableQuantity){
+        this.id = id;
+        this.price = price.orElseThrow();
         this.availableQuantity = availableQuantity;
+    }
+
+    public Product(BigDecimal price, long availableQuantity) {
+        this(null, Optional.ofNullable(price), availableQuantity);
     }
 
     public UUID getId() {
@@ -32,8 +36,21 @@ public final class Product {
 
     public Product addAvailableQuantity(long quantity) {
         return new Product(
-                Optional.of(this.id),
-                Optional.of(this.price),
+                this.id,
+                Optional.ofNullable(this.price),
                 this.availableQuantity + quantity);
+    }
+
+    public Product setId(UUID id) {
+        return new Product(id, Optional.ofNullable(this.price), this.availableQuantity);
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", price=" + price +
+                ", availableQuantity=" + availableQuantity +
+                '}';
     }
 }

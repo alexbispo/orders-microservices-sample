@@ -17,17 +17,12 @@ public class OrderTest {
 	
 	@Test
 	void givenOrderItemsAndAmount_whenAmountIsDifferent_thenIsFalse() {
-		Product product1 = new Product(
-				Optional.of(UUID.randomUUID()),
-				Optional.of(new BigDecimal("50.00")), 10L
+		Product product1 = new Product(new BigDecimal("50.00"), 10L
 		);
-		Product product2 = new Product(
-				Optional.of(UUID.randomUUID()),
-				Optional.of(new BigDecimal("50.00")), 10L
-		);
+		Product product2 = new Product(new BigDecimal("50.00"), 10L);
 
-		OrderItem item1 = new OrderItem(Optional.of(product1)).place();
-		OrderItem item2 = new OrderItem(Optional.of(product2)).place();
+		OrderItem item1 = new OrderItem(product1).place();
+		OrderItem item2 = new OrderItem(product2).place();
 		
 		Order order = new Order().addItem(item1).addItem(item2);
 		
@@ -36,17 +31,11 @@ public class OrderTest {
 	
 	@Test
 	void givenOrderItemsAndAmount_whenAmountIsCorrect_thenIsTrue() {
-		Product product1 = new Product(
-				Optional.of(UUID.randomUUID()),
-				Optional.of(new BigDecimal("50.00")), 10L
-		);
-		Product product2 = new Product(
-				Optional.of(UUID.randomUUID()),
-				Optional.of(new BigDecimal("50.00")), 10L
-		);
+		Product product1 = new Product(new BigDecimal("50.00"), 10L);
+		Product product2 = new Product(new BigDecimal("50.00"), 10L);
 
-		OrderItem item1 = new OrderItem(Optional.of(product1)).place();
-		OrderItem item2 = new OrderItem(Optional.of(product2)).place(2);
+		OrderItem item1 = new OrderItem(product1).place();
+		OrderItem item2 = new OrderItem(product2).place(2);
 		
 		Set<OrderItem> items = new HashSet<>();
 		items.add(item1);

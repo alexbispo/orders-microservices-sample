@@ -1,10 +1,10 @@
 package br.com.alexbispo.orders.creation;
 
+import br.com.alexbispo.orders.entities.OrderItem;
+
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Entity
 @Table(name = "orders")
@@ -14,8 +14,16 @@ public class JpaOrder {
     @GeneratedValue
     private UUID id;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private BigDecimal amount;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<JpaOrderItem> orderItems = new ArrayList<>();
+
+    public JpaOrder() {}
+
+    public JpaOrder(UUID orderId) {
+        this.id = orderId;
+    }
 
     public UUID getId() {
         return id;
@@ -33,5 +41,17 @@ public class JpaOrder {
     public void removeItem(JpaOrderItem item) {
         orderItems.remove(item);
         item.setOrder(null);
+    }
+
+    public void addItems(Set<JpaOrderItem> orderItems) {
+        orderItems.forEach(item -> addItem(item));
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
     }
 }

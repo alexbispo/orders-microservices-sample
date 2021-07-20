@@ -19,6 +19,12 @@ public class JpaProduct {
 
     private Long availableQuantity;
 
+    public JpaProduct() {}
+
+    public JpaProduct(UUID id) {
+        this.id = id;
+    }
+
     public UUID getId() {
         return id;
     }
@@ -29,5 +35,17 @@ public class JpaProduct {
 
     public Long getAvailableQuantity() {
         return availableQuantity;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public void setAvailableQuantity(Long availableQuantity) {
+        this.availableQuantity = availableQuantity;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 }

@@ -14,11 +14,8 @@ public class OrderItemTest {
 	
 	@Test
 	void whenIncrement_thenAmountShouldBeCalculated() {
-		Product product = new Product(
-				Optional.of(UUID.randomUUID()),
-				Optional.of(new BigDecimal("1.99")), 20L
-		);
-		OrderItem item = new OrderItem(Optional.of(product)).place(10);
+		Product product = new Product(new BigDecimal("1.99"), 20L);
+		OrderItem item = new OrderItem(product).place(10);
 		
 		BigDecimal expected = new BigDecimal("19.90");
 		assertTrue(expected.compareTo(item.getAmount()) == 0);
@@ -26,31 +23,25 @@ public class OrderItemTest {
 	
 	@Test
 	void whenIncrement_thenDecreaseAvailableQuantity() {
-		Product product = new Product(
-				Optional.of(UUID.randomUUID()),
-				Optional.of(new BigDecimal("1.99")), 20L
-		);
+		Product product = new Product(new BigDecimal("1.99"), 20L);
 
-		OrderItem item = new OrderItem(Optional.of(product)).place(10);
+		OrderItem item = new OrderItem(product).place(10);
 		
 		assertEquals(10L, item.getProductAvailableQuantity());
 	}
 	
 	@Test
 	void whenIncrementToGreaterThanAvailableQuantity_thenThrowsException() {
-		Product product = new Product(
-				Optional.of(UUID.randomUUID()),
-				Optional.of(new BigDecimal("1.99")), 5L
-		);
+		Product product = new Product(new BigDecimal("1.99"), 5L);
 
-		OrderItem item = new OrderItem(Optional.of(product));
+		OrderItem item = new OrderItem(product);
 		
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
 			item.place(10);
 		});
 		
 		assertEquals(
-				"Available quantity sold out. " + item, 
+				"Available quantity sold out. " + product,
 				exception.getMessage()
 		);
 	}

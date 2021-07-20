@@ -4,16 +4,16 @@ import java.util.UUID;
 
 public final class OrderCreationItemRequestModel {
 	
-	private final UUID orderItemId;
+	private final UUID productId;
 	private final long quantity;
 	
-	public OrderCreationItemRequestModel(UUID orderItemId, long quantity) {
-		this.orderItemId = orderItemId;
+	public OrderCreationItemRequestModel(UUID productId, long quantity) {
+		this.productId = productId;
 		this.quantity = quantity;
 	}
 	
 	public UUID getOrderIemId() {
-		return this.orderItemId;
+		return this.productId;
 	}
 	
 	public long getQuantity() {
@@ -22,14 +22,14 @@ public final class OrderCreationItemRequestModel {
 
 	@Override
 	public String toString() {
-		return "OrderItemRequestModel [orderItemId=" + orderItemId + ", quantity=" + quantity + "]";
+		return "OrderItemRequestModel [orderItemId=" + productId + ", quantity=" + quantity + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((orderItemId == null) ? 0 : orderItemId.hashCode());
+		result = prime * result + ((productId == null) ? 0 : productId.hashCode());
 		return result;
 	}
 
@@ -42,10 +42,10 @@ public final class OrderCreationItemRequestModel {
 		if (getClass() != obj.getClass())
 			return false;
 		OrderCreationItemRequestModel other = (OrderCreationItemRequestModel) obj;
-		if (orderItemId == null) {
-			if (other.orderItemId != null)
+		if (productId == null) {
+			if (other.productId != null)
 				return false;
-		} else if (!orderItemId.equals(other.orderItemId))
+		} else if (!productId.equals(other.productId))
 			return false;
 		return true;
 	}

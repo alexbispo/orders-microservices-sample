@@ -9,5 +9,5 @@ public interface OrderCreationItemsRepository {
 	
 	public Set<OrderItem> findByIds(Set<UUID> ids);
 
-	void save(OrderItem soldOutItem);
+	void saveAll(Set<OrderItem> orderItems, UUID orderId);
 }

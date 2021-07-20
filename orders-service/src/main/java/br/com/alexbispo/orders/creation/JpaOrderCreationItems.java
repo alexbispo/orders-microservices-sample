@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 public class JpaOrderCreationItems implements OrderCreationItemsRepository{
@@ -21,7 +22,19 @@ public class JpaOrderCreationItems implements OrderCreationItemsRepository{
     }
 
     @Override
-    public void save(OrderItem orderItem) {
+    public void saveAll(Set<OrderItem> orderItems, UUID orderId) {
+        Set<JpaOrderItem> jpaOrderItems = orderItems.stream().map(orderItem -> {
+            JpaOrderItem jpaOrderItem = new JpaOrderItem();
+            jpaOrderItem.setAmount(orderItem.getAmount());
+            jpaOrderItem.setQuantity(orderItem.getQuantity());
 
+            JpaProduct jpaProduct = new JpaProduct(orderItem.getProductId());
+
+            jpaOrderItem.setProduct(jpaProduct);
+            jpaOrderItem.setOrder(new JpaOrder(orderId));
+            return jpaOrderItem;
+        }).collect(Collectors.toSet());
+
+        this.repo.saveAllAndFlush(jpaOrderItems);
     }
 }
