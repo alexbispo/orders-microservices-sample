@@ -9,16 +9,24 @@ sum of each item unit price times the requested quantity.
 
 ### Application Rules
 
-* The system receives the Order
+- [ ] Receives the Order request via HTTP.
 
-* Is there in database the Order user?
+- [x] Chek the Order user in the database.
 
-* Are there in database all the Order items?
+- [x] Check all Order products in the database.
 
-* Is the Order items quantity available?
+- [x] Check the Order products available quantity.
 
-* Is correct the Order total value?
+- [x] Check the Order total value.
 
-* Saves the new Order
+- [x] Decrease the products available quantity.
 
-* Trigger Order Created Event.
+- [x] Saves the new Order.
+
+- [ ] Returns the Order id on the HTTP response.
+
+- [ ] Trigger Order Created Event.
+
+- [ ] Listen the Product Changed Event to keep product updated.
+
+- [ ] Listen User Changed Event to keep user updated.
