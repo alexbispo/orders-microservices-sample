@@ -1,4 +1,4 @@
-# Orders Service
+# Orders Service (Study case to apply Clean Architecture)
 
 ### Business Rules
 
@@ -30,3 +30,8 @@ sum of each item unit price times the requested quantity.
 - [ ] Listen the Product Changed Event to keep product updated.
 
 - [ ] Listen User Changed Event to keep user updated.
+
+### Refactoring (some notes while reading Clean Architecture book)
+
+- [ ] Removes the Output interface and its implementation, because it is not mandatory for clean architecture.
+- [ ] Place the entities inside of creation package.
